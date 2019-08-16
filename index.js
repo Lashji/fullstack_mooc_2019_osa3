@@ -56,10 +56,14 @@ app.post("/api/persons", (req, res) => {
     const body = req.body
     console.log("req body = ", req.body)
 
-    if (!body.name) {
+    if (!body.name || !body.number || nameExists(body.name)) {
+
+        const errMsg = !body.name || !body.number ? "content missing" : 'name must be unique'
+
         return res.status(400).json({
-            error: 'content missing'
+            error: errMsg
         })
+
     }
 
     const person = {
@@ -68,13 +72,13 @@ app.post("/api/persons", (req, res) => {
         id: generateId()
     }
 
-    console.log("new person = ", person)
     persons = persons.concat(person)
-    console.log("persons after concat => ", persons)
-
-
     res.json(person)
 })
+
+const nameExists = (name) => {
+    return persons.find(person => person.name === name)
+}
 
 const PORT = 3001
 
