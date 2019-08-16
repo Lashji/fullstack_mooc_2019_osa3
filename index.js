@@ -22,6 +22,10 @@ let persons = [{
     id: 4
 }, ]
 
+const generateId = () => {
+    return Math.floor(Math.random() * 1000000);
+}
+
 app.get("/api/persons", (req, res) => {
     res.json(persons)
 })
@@ -41,12 +45,35 @@ app.get("/api/persons/:id", (req, res) => {
         res.status(404).end()
 })
 
-
 app.delete("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
 
     res.status(204).end()
+})
+
+app.post("/api/persons", (req, res) => {
+    const body = req.body
+    console.log("req body = ", req.body)
+
+    if (!body.name) {
+        return res.status(400).json({
+            error: 'content missing'
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId()
+    }
+
+    console.log("new person = ", person)
+    persons = persons.concat(person)
+    console.log("persons after concat => ", persons)
+
+
+    res.json(person)
 })
 
 const PORT = 3001
