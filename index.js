@@ -4,7 +4,10 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 app.use(bodyParser.json())
-app.use(morgan('tiny'))
+morgan.token('body', (req) => JSON.stringify(req.body))
+
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [{
     name: "Arto Hellas",
@@ -57,7 +60,7 @@ app.delete("/api/persons/:id", (req, res) => {
 
 app.post("/api/persons", (req, res) => {
     const body = req.body
-    console.log("req body = ", req.body)
+    // console.log("req body = ", req.body)
 
     if (!body.name || !body.number || nameExists(body.name)) {
 
