@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express();
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
+app.use(morgan('tiny'))
 
 let persons = [{
     name: "Arto Hellas",
@@ -21,6 +23,7 @@ let persons = [{
     number: "39-23-6423122",
     id: 4
 }, ]
+
 
 const generateId = () => {
     return Math.floor(Math.random() * 1000000);
@@ -79,6 +82,7 @@ app.post("/api/persons", (req, res) => {
 const nameExists = (name) => {
     return persons.find(person => person.name === name)
 }
+
 
 const PORT = 3001
 
